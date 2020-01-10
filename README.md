@@ -1,4 +1,4 @@
-# Ape-X-gRpc.github.io
+# Ape-X-gRpc
 Implement DeepMind Ape-X by using google gRpc.
 Continuously updating ...
 
