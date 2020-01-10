@@ -1,0 +1,126 @@
+syntax = "proto3";
+package apex;
+
+message BatchPrioriRequest{
+    repeated int32 idxes = 1;
+    repeated float prioris = 2;
+    int32 actor_id = 3;
+}
+
+message BatchPrioriResponse{
+    bool response = 1;
+}
+
+message UpdatePrioriRequest{
+    repeated int32 idxes = 1;
+    repeated float prioris = 2;
+}
+
+message UpdatePrioriResponse{
+    bool response = 1;
+}
+
+message RealBatchRequest{
+    repeated int32 idxes = 1;
+}
+
+message RealBatchResponse{
+    message Data{
+        bytes state = 1;
+        int32 action = 2;
+        float reward = 3;
+        bytes next_state = 4;
+        bool done = 5;
+    }
+    repeated Data data = 1;
+}
+
+message RealDataResponse{
+    bytes state = 1;
+    int32 action = 2;
+    float reward = 3;
+    bytes next_state = 4;
+    bool done = 5;
+    int32 idx = 6;
+}
+
+message ParametersRequest{
+    bool param_req = 1;
+}
+
+message ParametersResponse{
+    message ParamStruct{
+        string key = 1;
+        repeated float values = 2;
+        repeated int32 shape = 3;
+    }
+    repeated ParamStruct parameters = 1;
+}
+
+message SingleParameter{
+    string key = 1;
+    repeated float values = 2;
+    repeated int32 shape = 3;
+}
+
+message SampleDataRequest{
+    int32 batch_size = 1;
+    float beta = 2;
+}
+
+message SampleDataResponse{
+    message Data{
+        bytes state = 1;
+        int32 action = 2;
+        float reward = 3;
+        bytes next_state = 4;
+        bool done = 5;
+    }
+    repeated Data data = 1;
+    repeated float weights = 2;
+    repeated int32 idxes = 3;
+}
+
+message SampleSingleDataResponse{
+    bytes state = 1;
+    int32 action = 2;
+    float reward = 3;
+    bytes next_state = 4;
+    bool done = 5;
+    float weight = 6;
+    int32 idx = 7;
+}
+
+message ActorRegisterRequest{
+    string actor_ip = 1;
+    int32 actor_id = 2;
+    string data_port = 3;
+}
+
+message ActorRegisterResponse{
+    bool response = 1;
+}
+
+service SendBatchPriori{
+    rpc Send(BatchPrioriRequest) returns (BatchPrioriResponse) {}
+}
+
+service SendRealData{
+    rpc Send(RealBatchRequest) returns (stream RealDataResponse) {}
+}
+
+service SampleData{
+    rpc Send(SampleDataRequest) returns (stream SampleSingleDataResponse) {}
+}
+
+service UpdateBatchPriori{
+    rpc Send(UpdatePrioriRequest) returns (UpdatePrioriResponse) {}
+}
+
+service SendParameter{
+    rpc Send(ParametersRequest) returns (stream SingleParameter) {}
+}
+
+service RegisterActor{
+    rpc Send(ActorRegisterRequest) returns (ActorRegisterResponse) {}
+}
