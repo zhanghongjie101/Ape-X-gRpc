@@ -37,7 +37,7 @@ def get_environ():
     return n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, parameterPort
 
 
-def sample_batch(args, batch_queue, port_dict, device):
+def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
     """
     receive batch from replay and transfer batch from cpu to gpu
     """
@@ -45,14 +45,39 @@ def sample_batch(args, batch_queue, port_dict, device):
     client = apex_data_pb2_grpc.SampleDataStub(channel=conn)
 
     while True:
-        res_batch = client.Send(apex_data_pb2.SampleDataRequest(batch_size=args.batch_size, beta = args.beta))
+        #start = time.time()
         batch_data = []
         batch_weights = []
         batch_idxes = []
-        for res_data in res_batch:
-            batch_data.append(res_data)
-            batch_weights.append(res_data.weight)
-            batch_idxes.append(res_data.idx)
+
+        res_batch = client.Send(apex_data_pb2.SampleDataRequest(batch_size=args.batch_size, beta = args.beta))
+        actor_ids, data_ids, weights, idxes = res_batch.actor_ids, res_batch.data_ids, res_batch.weights, res_batch.idxes
+        actor_set = {}
+        for i in range(len(actor_ids)):
+            set_a = actor_set.get(actor_ids[i], False)
+            if set_a == False:
+                actor_set[actor_ids[i]] = {}
+                set_a = actor_set[actor_ids[i]]
+                set_a['d'] = []
+                set_a['w'] = []
+                set_a['i'] = []
+            set_a['d'].append(data_ids[i])
+            set_a['w'].append(weights[i])
+            set_a['i'].append(idxes[i])
+
+        for k, v in actor_set.items():
+            actor_ip, data_port = actor_id_to_ip_dataport[k]
+            conn_actor = grpc.insecure_channel(actor_ip + ':' + data_port)
+            client_actor = apex_data_pb2_grpc.SendRealDataStub(channel=conn_actor)
+            if client != False:
+                real_datas = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
+                for real_data in real_datas:
+                    batch_data.append(real_data)
+                    batch_weights.append(v['w'][real_data.idx])
+                    batch_idxes.append(v['i'][real_data.idx])
+
+        #end = time.time()
+        #print("sample time:{}".format(end-start))
 
         states, actions, rewards, next_states, dones = [], [], [], [], []
         for i in range(len(batch_weights)):
@@ -123,6 +148,8 @@ def train(args, n_actors, batch_queue, prios_queue, param_queue):
     learn_idx = 0
     ts = time.time()
     while True:
+        #if batch_queue.empty():
+        #    print("batch queue size:{}".format(batch_queue.qsize()))
         *batch, idxes = batch_queue.get()
         loss, prios = utils.compute_loss(model, tgt_model, batch, args.n_steps, args.gamma)
         grad_norm = utils.update_parameters(loss, model, optimizer, args.max_norm)
@@ -159,6 +186,15 @@ class SendParameter(apex_data_pb2_grpc.SendParameterServicer):
                 single_param = apex_data_pb2.SingleParameter(key=k, values = value, shape=shape)
                 yield single_param
 
+class RegisterActor(apex_data_pb2_grpc.RegisterActorServicer):
+    def Send(self, request, context):
+        actor_id = request.actor_id
+        actor_ip = request.actor_ip
+        data_port = request.data_port
+        actor_id_to_ip_dataport[actor_id] = (actor_ip, data_port)
+        response = apex_data_pb2.ActorRegisterResponse(response=True)
+        return response
+
 
 if __name__ == '__main__':
     mp.set_start_method('spawn')
@@ -182,6 +218,19 @@ if __name__ == '__main__':
     batch_queue = Queue(maxsize=args.queue_size)
     prios_queue = Queue(maxsize=args.prios_queue_size)
     param_queue = Queue(maxsize=1)
+
+    actor_id_to_ip_dataport = Manager().dict()
+
+    """
+    actor register themselves (actor_id, actor_ip, data_port)
+    """
+    # registerActorPort = '8079'
+    registerActorServer = grpc.server(ThreadPoolExecutor(max_workers=4))
+    apex_data_pb2_grpc.add_RegisterActorServicer_to_server(RegisterActor(), registerActorServer)
+    registerActorServer.add_insecure_port(learner_ip + ':' + registerActorPort)
+    registerActorServer.start()
+    print("ready for register server")
+
     """
     send parameter from learner to actor
     """
@@ -200,7 +249,7 @@ if __name__ == '__main__':
         procs.append(p)
 
     for _ in range(args.n_recv_batch_process):
-        p = Process(target=sample_batch, args=(args, batch_queue, port_dict, args.device))
+        p = Process(target=sample_batch, args=(args, batch_queue, port_dict, args.device, actor_id_to_ip_dataport))
         procs.append(p)
     for p in procs:
         p.start()

@@ -24,17 +24,6 @@ message RealBatchRequest{
     repeated int32 idxes = 1;
 }
 
-message RealBatchResponse{
-    message Data{
-        bytes state = 1;
-        int32 action = 2;
-        float reward = 3;
-        bytes next_state = 4;
-        bool done = 5;
-    }
-    repeated Data data = 1;
-}
-
 message RealDataResponse{
     bytes state = 1;
     int32 action = 2;
@@ -46,15 +35,6 @@ message RealDataResponse{
 
 message ParametersRequest{
     bool param_req = 1;
-}
-
-message ParametersResponse{
-    message ParamStruct{
-        string key = 1;
-        repeated float values = 2;
-        repeated int32 shape = 3;
-    }
-    repeated ParamStruct parameters = 1;
 }
 
 message SingleParameter{
@@ -69,16 +49,10 @@ message SampleDataRequest{
 }
 
 message SampleDataResponse{
-    message Data{
-        bytes state = 1;
-        int32 action = 2;
-        float reward = 3;
-        bytes next_state = 4;
-        bool done = 5;
-    }
-    repeated Data data = 1;
-    repeated float weights = 2;
-    repeated int32 idxes = 3;
+    repeated int32 actor_ids = 1;
+    repeated int32 data_ids = 2;
+    repeated float weights = 3;
+    repeated int32 idxes = 4;
 }
 
 message SampleSingleDataResponse{
@@ -110,7 +84,7 @@ service SendRealData{
 }
 
 service SampleData{
-    rpc Send(SampleDataRequest) returns (stream SampleSingleDataResponse) {}
+    rpc Send(SampleDataRequest) returns (SampleDataResponse) {}
 }
 
 service UpdateBatchPriori{

@@ -93,65 +93,12 @@ class SampleData(apex_data_pb2_grpc.SampleDataServicer):
         """
         same actor data in same request
         """
-        actor_ids, data_ids, weigths, idxes = batch
-        actor_set = {}
-        for i in range(len(actor_ids)):
-            set_a = actor_set.get(actor_ids[i], False)
-            if set_a==False:
-                actor_set[actor_ids[i]] = {}
-                set_a = actor_set[actor_ids[i]]
-                set_a['d'] = []
-                set_a['w'] = []
-                set_a['i'] = []
-            set_a['d'].append(data_ids[i])
-            set_a['w'].append(weigths[i])
-            set_a['i'].append(idxes[i])
+        actor_ids, data_ids, weights, idxes = batch
+        actor_ids = actor_ids.tolist()
+        data_ids = data_ids.tolist()
+        weights = weights.tolist()
+        return apex_data_pb2.SampleDataResponse(actor_ids = actor_ids, data_ids = data_ids, weights = weights, idxes = idxes)
 
-        for k,v in actor_set.items():
-            client = actor_id_to_dataconn.get(k, False)
-            if client != False:
-                real_datas = client.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
-                for real_data in real_datas:
-                    rep_data = apex_data_pb2.SampleSingleDataResponse()
-                    rep_data.state = real_data.state
-                    rep_data.action = real_data.action
-                    rep_data.reward = real_data.reward
-                    rep_data.next_state = real_data.next_state
-                    rep_data.done = real_data.done
-                    rep_data.idx = v['i'][real_data.idx]
-                    rep_data.weight = v['w'][real_data.idx]
-                    yield rep_data
-        '''
-        for actor_id, data_id, weigth, idx in zip(actor_ids, data_ids, weigths, idxes):
-            client = actor_id_to_dataconn.get(actor_id, False)
-            if client != False:
-                real_datas = client.Send(apex_data_pb2.RealBatchRequest(idxes=[data_id]))
-                for real_data in real_datas:
-                    rep_data = apex_data_pb2.SampleSingleDataResponse()
-                    rep_data.state = real_data.state
-                    rep_data.action = real_data.action
-                    rep_data.reward = real_data.reward
-                    rep_data.next_state = real_data.next_state
-                    rep_data.done = real_data.done
-                    rep_data.idx = idx
-                    rep_data.weight = weigth
-                    yield rep_data
-        '''
-
-
-class RegisterActor(apex_data_pb2_grpc.RegisterActorServicer):
-    def Send(self, request, context):
-        actor_id = request.actor_id
-        actor_ip = request.actor_ip
-        data_port = request.data_port
-        actor_id_to_ip_dataport[actor_id] = (actor_ip, data_port)
-        if actor_id_to_dataconn.get(actor_id, False) == False:
-            actor_ip, data_port = actor_id_to_ip_dataport[actor_id]
-            conn = grpc.insecure_channel(actor_ip + ':' + data_port)
-            client = apex_data_pb2_grpc.SendRealDataStub(channel=conn)
-            actor_id_to_dataconn[actor_id] = client
-        response = apex_data_pb2.ActorRegisterResponse(response=True)
-        return response
 
 if __name__ == '__main__':
     """
@@ -164,17 +111,6 @@ if __name__ == '__main__':
     buffer = CustomPrioritizedReplayBuffer(args.replay_buffer_size, args.alpha)
     event = Event()
     lock = Lock()
-
-    actor_id_to_ip_dataport = {}
-    actor_id_to_dataconn = {}
-    """
-    actor register themselves (actor_id, actor_ip, data_port)
-    """
-    #registerActorPort = '8079'
-    registerActorServer = grpc.server(ThreadPoolExecutor(max_workers=4))
-    apex_data_pb2_grpc.add_RegisterActorServicer_to_server(RegisterActor(), registerActorServer)
-    registerActorServer.add_insecure_port(replay_ip+':'+registerActorPort)
-    registerActorServer.start()
 
     """
     actor send (actor_id, data_id, priori) to replay buffer
@@ -205,7 +141,7 @@ if __name__ == '__main__':
         while True:
             time.sleep(60*60*24)
     except KeyboardInterrupt:
-        registerActorServer.stop(0)
+        #registerActorServer.stop(0)
         sendBatchPrioriServer.stop(0)
         updatePrioriServer.stop(0)
         sampleDataServer.stop(0)

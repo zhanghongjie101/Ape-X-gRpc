@@ -174,7 +174,7 @@ if __name__ == '__main__':
 
     #time.sleep(3)
 
-    conn = grpc.insecure_channel(port_dict['replay_ip'] + ':' + port_dict['registerActorPort'])
+    conn = grpc.insecure_channel(port_dict['learner_ip'] + ':' + port_dict['registerActorPort'])
     client = apex_data_pb2_grpc.RegisterActorStub(channel=conn)
     request = apex_data_pb2.ActorRegisterRequest(actor_ip=actor_ip, actor_id = actor_id, data_port = sampleDataPortReplay)
     response = client.Send(request=request)
