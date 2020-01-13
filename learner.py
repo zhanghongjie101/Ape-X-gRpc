@@ -47,11 +47,13 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
     while True:
         #start = time.time()
         batch_data = []
+        batch_timestamp_real = []
+        batch_timestamp_store =[]
         batch_weights = []
         batch_idxes = []
 
         res_batch = client.Send(apex_data_pb2.SampleDataRequest(batch_size=args.batch_size, beta = args.beta))
-        actor_ids, data_ids, weights, idxes = res_batch.actor_ids, res_batch.data_ids, res_batch.weights, res_batch.idxes
+        actor_ids, data_ids, timestamps, weights, idxes = res_batch.actor_ids, res_batch.data_ids, res_batch.timestamp, res_batch.weights, res_batch.idxes
         actor_set = {}
         for i in range(len(actor_ids)):
             set_a = actor_set.get(actor_ids[i], False)
@@ -61,23 +63,27 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
                 set_a['d'] = []
                 set_a['w'] = []
                 set_a['i'] = []
+                set_a['t'] = []
             set_a['d'].append(data_ids[i])
             set_a['w'].append(weights[i])
             set_a['i'].append(idxes[i])
+            set_a['t'].append(timestamps[i])
 
         for k, v in actor_set.items():
             actor_ip, data_port = actor_id_to_ip_dataport[k]
             conn_actor = grpc.insecure_channel(actor_ip + ':' + data_port)
             client_actor = apex_data_pb2_grpc.SendRealDataStub(channel=conn_actor)
+
             if client != False:
                 real_datas = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
                 for real_data in real_datas:
                     batch_data.append(real_data)
+                    batch_timestamp_real.append(real_data.timestamp)
                     batch_weights.append(v['w'][real_data.idx])
                     batch_idxes.append(v['i'][real_data.idx])
+                    batch_timestamp_store.append(v['t'][real_data.idx])
 
-        #end = time.time()
-        #print("sample time:{}".format(end-start))
+        #print((np.array(batch_timestamp_real)==np.array(batch_timestamp_store)).all())
 
         states, actions, rewards, next_states, dones = [], [], [], [], []
         for i in range(len(batch_weights)):
@@ -86,7 +92,6 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             rewards.append(batch_data[i].reward)
             next_states.append(batch_data[i].next_state)
             dones.append(batch_data[i].done)
-
         states = np.array([np.frombuffer(zlib.decompress(state), dtype=np.uint8).reshape((4,84,84)) for state in states])
         states = torch.FloatTensor(states).to(device)
         actions = torch.LongTensor(actions).to(device)
@@ -97,8 +102,6 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
         weights = torch.FloatTensor(batch_weights).to(device)
 
         batch = [states, actions, rewards, next_states, dones, weights, batch_idxes]
-        #if batch_queue.full():
-        #    print("batch_queue size of recv batch:{}".format(batch_queue.qsize()))
         batch_queue.put(batch)
         data, batch = None, None
 

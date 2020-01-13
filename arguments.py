@@ -72,7 +72,7 @@ def argparser():
                         help='Interval of saving model parameters')
     parser.add_argument('--bps_interval', type=int, default=100,
                         help='Interval of logging BPS')
-    parser.add_argument('--n_recv_batch_process', type=int, default=4,
+    parser.add_argument('--n_recv_batch_process', type=int, default=10,
                         help='Number of processes to receive batch from replay')
     parser.add_argument('--n_send_prios_process', type=int, default=1,
                         help='Number of processes to send prios from replay')

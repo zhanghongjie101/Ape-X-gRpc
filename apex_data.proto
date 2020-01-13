@@ -5,6 +5,7 @@ message BatchPrioriRequest{
     repeated int32 idxes = 1;
     repeated float prioris = 2;
     int32 actor_id = 3;
+    repeated float timestamp = 4;
 }
 
 message BatchPrioriResponse{
@@ -31,6 +32,7 @@ message RealDataResponse{
     bytes next_state = 4;
     bool done = 5;
     int32 idx = 6;
+    float timestamp = 7;
 }
 
 message ParametersRequest{
@@ -51,8 +53,9 @@ message SampleDataRequest{
 message SampleDataResponse{
     repeated int32 actor_ids = 1;
     repeated int32 data_ids = 2;
-    repeated float weights = 3;
-    repeated int32 idxes = 4;
+    repeated float timestamp = 3;
+    repeated float weights = 4;
+    repeated int32 idxes = 5;
 }
 
 message SampleSingleDataResponse{
@@ -63,6 +66,7 @@ message SampleSingleDataResponse{
     bool done = 5;
     float weight = 6;
     int32 idx = 7;
+    float timestamp = 8;
 }
 
 message ActorRegisterRequest{

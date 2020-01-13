@@ -5,8 +5,18 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/actor.py" beforeDir="false" afterPath="$PROJECT_DIR$/actor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apex_data.proto" beforeDir="false" afterPath="$PROJECT_DIR$/apex_data.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apex_data_pb2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apex_data_pb2_grpc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/arguments.py" beforeDir="false" afterPath="$PROJECT_DIR$/arguments.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learner.py" beforeDir="false" afterPath="$PROJECT_DIR$/learner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.pth" beforeDir="false" afterPath="$PROJECT_DIR$/model.pth" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/replay.py" beforeDir="false" afterPath="$PROJECT_DIR$/replay.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor4/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor4/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor5/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor5/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor6/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor6/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor7/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor7/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-54_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-learner/events.out.tfevents.1578713154.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-54_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-learner/events.out.tfevents.1578713154.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,12 +31,12 @@
           <entry key="project.closed" value="3" />
           <entry key="project.open.time.0" value="3" />
           <entry key="project.open.time.12" value="1" />
-          <entry key="project.open.time.5" value="3" />
-          <entry key="project.open.time.6" value="2" />
+          <entry key="project.open.time.5" value="5" />
+          <entry key="project.open.time.6" value="3" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="14" />
+          <entry key="project.opened" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -45,8 +55,8 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="proto" value="1394" />
-          <entry key="py" value="7728" />
+          <entry key="proto" value="1506" />
+          <entry key="py" value="8192" />
           <entry key="sh" value="83" />
         </counts>
       </usages-collector>
@@ -54,8 +64,8 @@
         <counts>
           <entry key="Bash" value="83" />
           <entry key="PLAIN_TEXT" value="1221" />
-          <entry key="PROTO" value="173" />
-          <entry key="Python" value="7728" />
+          <entry key="PROTO" value="285" />
+          <entry key="Python" value="8192" />
         </counts>
       </usages-collector>
     </session>
@@ -65,8 +75,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/actor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="574">
-              <caret line="176" column="54" selection-start-line="176" selection-start-column="54" selection-end-line="176" selection-end-column="54" />
+            <state relative-caret-position="709">
+              <caret line="144" column="38" selection-start-line="144" selection-start-column="38" selection-end-line="144" selection-end-column="38" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -86,12 +96,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/learner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="676">
-              <caret line="77" lean-forward="true" selection-start-line="77" selection-end-line="77" />
+            <state relative-caret-position="630">
+              <caret line="85" column="9" selection-start-line="85" selection-start-column="9" selection-end-line="85" selection-end-column="9" />
               <folding>
                 <element signature="e#37#48#0" expanded="true" />
-                <marker date="1578713134050" expanded="true" signature="4846:5076" ph="..." />
-                <marker date="1578713134050" expanded="true" signature="7968:7971" ph="..." />
+                <marker date="1578885673861" expanded="true" signature="5059:5289" ph="..." />
+                <marker date="1578885673861" expanded="true" signature="8181:8184" ph="..." />
               </folding>
             </state>
           </provider>
@@ -112,7 +122,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/arguments.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="574">
+            <state relative-caret-position="649">
               <caret line="74" column="70" selection-start-line="74" selection-start-column="70" selection-end-line="74" selection-end-column="70" />
             </state>
           </provider>
@@ -121,8 +131,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apex_data.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="32" column="13" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="13" />
+            <state relative-caret-position="398">
+              <caret line="34" column="19" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -130,13 +140,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/replay.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="95" column="44" selection-start-line="95" selection-start-column="8" selection-end-line="95" selection-end-column="44" />
+            <state relative-caret-position="661">
+              <caret line="101" column="146" selection-start-line="101" selection-start-column="146" selection-end-line="101" selection-end-column="146" />
               <folding>
                 <element signature="e#76#100#0" expanded="true" />
-                <marker date="1578712703707" expanded="true" signature="1548:1606" ph="..." />
-                <marker date="1578712703707" expanded="true" signature="2647:2678" ph="..." />
-                <marker date="1578712703707" expanded="true" signature="3372:3374" ph="..." />
+                <marker date="1578885136915" expanded="true" signature="1594:1652" ph="..." />
+                <marker date="1578885136915" expanded="true" signature="2744:2775" ph="..." />
+                <marker date="1578885136915" expanded="true" signature="3544:3546" ph="..." />
               </folding>
             </state>
           </provider>
@@ -145,8 +155,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/memory.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="239" column="8" selection-start-line="239" selection-start-column="8" selection-end-line="239" selection-end-column="8" />
+            <state relative-caret-position="1546">
+              <caret line="367" column="75" selection-start-line="367" selection-start-column="75" selection-end-line="367" selection-end-column="75" />
             </state>
           </provider>
         </entry>
@@ -178,11 +188,11 @@
         <option value="$PROJECT_DIR$/run_actor.sh" />
         <option value="$PROJECT_DIR$/run_learner.sh" />
         <option value="$PROJECT_DIR$/run_replay.sh" />
-        <option value="$PROJECT_DIR$/memory.py" />
         <option value="$PROJECT_DIR$/arguments.py" />
         <option value="$PROJECT_DIR$/apex_data.proto" />
-        <option value="$PROJECT_DIR$/replay.py" />
         <option value="$PROJECT_DIR$/actor.py" />
+        <option value="$PROJECT_DIR$/memory.py" />
+        <option value="$PROJECT_DIR$/replay.py" />
         <option value="$PROJECT_DIR$/learner.py" />
       </list>
     </option>
@@ -197,7 +207,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -209,6 +218,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -324,6 +334,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/apex_data_pb2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9930">
+          <caret line="662" selection-start-line="662" selection-end-line="662" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apex_data_pb2_grpc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="187" column="73" lean-forward="true" selection-start-line="187" selection-start-column="73" selection-end-line="187" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/run_learner.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -341,72 +365,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/arguments.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="574">
-          <caret line="74" column="70" selection-start-line="74" selection-start-column="70" selection-end-line="74" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/memory.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="239" column="8" selection-start-line="239" selection-start-column="8" selection-end-line="239" selection-end-column="8" />
+        <state relative-caret-position="1546">
+          <caret line="367" column="75" selection-start-line="367" selection-start-column="75" selection-end-line="367" selection-end-column="75" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apex_data_pb2.py">
+    <entry file="file://$PROJECT_DIR$/arguments.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9930">
-          <caret line="662" selection-start-line="662" selection-end-line="662" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apex_data_pb2_grpc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="187" column="73" lean-forward="true" selection-start-line="187" selection-start-column="73" selection-end-line="187" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/actor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="574">
-          <caret line="176" column="54" selection-start-line="176" selection-start-column="54" selection-end-line="176" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="649">
+          <caret line="74" column="70" selection-start-line="74" selection-start-column="70" selection-end-line="74" selection-end-column="70" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/replay.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="95" column="44" selection-start-line="95" selection-start-column="8" selection-end-line="95" selection-end-column="44" />
+        <state relative-caret-position="661">
+          <caret line="101" column="146" selection-start-line="101" selection-start-column="146" selection-end-line="101" selection-end-column="146" />
           <folding>
             <element signature="e#76#100#0" expanded="true" />
-            <marker date="1578712703707" expanded="true" signature="1548:1606" ph="..." />
-            <marker date="1578712703707" expanded="true" signature="2647:2678" ph="..." />
-            <marker date="1578712703707" expanded="true" signature="3372:3374" ph="..." />
+            <marker date="1578885136915" expanded="true" signature="1594:1652" ph="..." />
+            <marker date="1578885136915" expanded="true" signature="2744:2775" ph="..." />
+            <marker date="1578885136915" expanded="true" signature="3544:3546" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apex_data.proto">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="32" column="13" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="13" />
+        <state relative-caret-position="398">
+          <caret line="34" column="19" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/actor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="709">
+          <caret line="144" column="38" selection-start-line="144" selection-start-column="38" selection-end-line="144" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/learner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="676">
-          <caret line="77" lean-forward="true" selection-start-line="77" selection-end-line="77" />
+        <state relative-caret-position="630">
+          <caret line="85" column="9" selection-start-line="85" selection-start-column="9" selection-end-line="85" selection-end-column="9" />
           <folding>
             <element signature="e#37#48#0" expanded="true" />
-            <marker date="1578713134050" expanded="true" signature="4846:5076" ph="..." />
-            <marker date="1578713134050" expanded="true" signature="7968:7971" ph="..." />
+            <marker date="1578885673861" expanded="true" signature="5059:5289" ph="..." />
+            <marker date="1578885673861" expanded="true" signature="8181:8184" ph="..." />
           </folding>
         </state>
       </provider>

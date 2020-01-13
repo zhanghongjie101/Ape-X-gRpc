@@ -114,12 +114,15 @@ def sendBatchPrioriProcess(send_queue, port_dict, local_buffer, next_idx, buffer
     while True:
         batch, priori = send_queue.get(block=True)
         idx_send = []
+        timestamp_send = []
         for sample in zip(*batch):
+            timestamp = time.time()
             with lock:
-                local_buffer[next_idx.value] = sample
+                local_buffer[next_idx.value] = (sample, timestamp)
                 idx_send.append(next_idx.value)
+                timestamp_send.append(timestamp)
                 next_idx.value = (next_idx.value+1)%buffer_size.value
-        request = apex_data_pb2.BatchPrioriRequest(idxes = idx_send, prioris = priori.tolist(), actor_id = actor_id)
+        request = apex_data_pb2.BatchPrioriRequest(idxes = idx_send, prioris = priori.tolist(), actor_id = actor_id, timestamp=timestamp_send)
         response = client.Send(request)
         if response.response:
             print("Send Batch...")
@@ -131,7 +134,7 @@ class SendRealData(apex_data_pb2_grpc.SendRealDataServicer):
         cnt = 0
         for idx in idxes:
             with lock:
-                state, action, reward, next_state, done = local_buffer[idx]
+                (state, action, reward, next_state, done), timestamp = local_buffer[idx]
             data = apex_data_pb2.RealDataResponse()
             data.state = state
             data.action = action
@@ -139,6 +142,7 @@ class SendRealData(apex_data_pb2_grpc.SendRealDataServicer):
             data.next_state = next_state
             data.done = done
             data.idx = cnt
+            data.timestamp = timestamp
             cnt += 1
             yield data
 
@@ -167,7 +171,7 @@ if __name__ == '__main__':
     """
     actor sends real data to replay buffer
     """
-    sendRealDataServer = grpc.server(ThreadPoolExecutor(max_workers=4))
+    sendRealDataServer = grpc.server(ThreadPoolExecutor(max_workers=8))
     apex_data_pb2_grpc.add_SendRealDataServicer_to_server(SendRealData(), sendRealDataServer)
     sendRealDataServer.add_insecure_port(actor_ip + ':' + sampleDataPortReplay)
     sendRealDataServer.start()

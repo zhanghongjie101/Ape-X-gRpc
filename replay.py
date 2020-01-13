@@ -23,12 +23,12 @@ def get_environ():
     sampleDataPort = os.environ.get('SAMPLEDATAPORT', '-1')
     return n_actors, replay_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort
 
-def push_batch(buffer, actor_id, data_ids, prioris):
+def push_batch(buffer, actor_id, data_ids, prioris, timestamps):
     """
     support function to push batch samples to buffer
     """
-    for data_id, priori in zip(data_ids, prioris):
-        buffer.add(actor_id, data_id, priori)
+    for data_id, priori, timestamp in zip(data_ids, prioris, timestamps):
+        buffer.add(actor_id, data_id, priori, timestamp)
 
 
 def update_prios(buffer, idxes, prios):
@@ -55,8 +55,9 @@ class SendBatchPriori(apex_data_pb2_grpc.SendBatchPrioriServicer):
         actor_id = request.actor_id
         idxes = request.idxes
         prioris = request.prioris
+        timestamps = request.timestamp
         with lock:
-            push_batch(buffer, actor_id, idxes, prioris)
+            push_batch(buffer, actor_id, idxes, prioris, timestamps)
         if self.cnt % 10 == 0:
             print("recv batch priori actor:{}, buffer len:{}".format(actor_id, len(buffer)))
         if len(buffer._storage) > args.threshold_size and not self.event_flag:
@@ -93,11 +94,12 @@ class SampleData(apex_data_pb2_grpc.SampleDataServicer):
         """
         same actor data in same request
         """
-        actor_ids, data_ids, weights, idxes = batch
+        actor_ids, data_ids, timestamps, weights, idxes = batch
         actor_ids = actor_ids.tolist()
         data_ids = data_ids.tolist()
+        timestamps = timestamps.tolist()
         weights = weights.tolist()
-        return apex_data_pb2.SampleDataResponse(actor_ids = actor_ids, data_ids = data_ids, weights = weights, idxes = idxes)
+        return apex_data_pb2.SampleDataResponse(actor_ids = actor_ids, data_ids = data_ids, weights = weights, idxes = idxes, timestamp=timestamps)
 
 
 if __name__ == '__main__':
@@ -132,7 +134,7 @@ if __name__ == '__main__':
     learner sample a batch (batch_size, beta) from replay buffer
     """
     #sampleDataPort = '8082'
-    sampleDataServer = grpc.server(ThreadPoolExecutor(max_workers=4))
+    sampleDataServer = grpc.server(ThreadPoolExecutor(max_workers=8))
     apex_data_pb2_grpc.add_SampleDataServicer_to_server(SampleData(), sampleDataServer)
     sampleDataServer.add_insecure_port(replay_ip+':'+sampleDataPort)
     sampleDataServer.start()

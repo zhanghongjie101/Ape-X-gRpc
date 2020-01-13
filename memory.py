@@ -343,9 +343,9 @@ class CustomPrioritizedReplayBuffer(PrioritizedReplayBuffer):
         self._it_min[idx] = priority ** self._alpha
         self._max_priority = max(self._max_priority, priority)
     '''
-    def add(self, actor_id, data_id, priori):
+    def add(self, actor_id, data_id, priori, timestamp):
         idx = self._next_idx
-        data = (actor_id, data_id)
+        data = (actor_id, data_id, timestamp)
 
         if self._next_idx >= len(self._storage):
             self._storage.append(data)
@@ -358,13 +358,14 @@ class CustomPrioritizedReplayBuffer(PrioritizedReplayBuffer):
         self._max_priority = max(self._max_priority, priori)
 
     def _encode_sample(self, idxes):
-        actor_ids, data_ids = [], []
+        actor_ids, data_ids, timestamps = [], [], []
         for i in idxes:
             data = self._storage[i]
-            actor_id, data_id = data
+            actor_id, data_id, timestamp = data
             actor_ids.append(actor_id)
             data_ids.append(data_id)
-        return np.array(actor_ids), np.array(data_ids)
+            timestamps.append(timestamp)
+        return np.array(actor_ids), np.array(data_ids), np.array(timestamps)
 
 
 class BatchStorage:
