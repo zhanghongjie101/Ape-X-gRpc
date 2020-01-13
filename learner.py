@@ -71,26 +71,27 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             set_a['i'].append(idxes[i])
             set_a['t'].append(timestamps[i])
 
+        real_data_links = {}
         for k, v in actor_set.items():
             actor_ip, data_port = actor_id_to_ip_dataport[k]
             conn_actor = grpc.insecure_channel(actor_ip + ':' + data_port)
             client_actor = apex_data_pb2_grpc.SendRealDataStub(channel=conn_actor)
+            real_data_links[k] = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
 
-            if client != False:
-                real_datas = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
-                for real_data in real_datas:
-                    decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.state), dtype=np.uint8).reshape((1,4,84,84)))
-                    states.append(decom_state.to(device))
-                    actions.append(torch.LongTensor([real_data.action]).to(device))
-                    rewards.append(torch.FloatTensor([real_data.reward]).to(device))
-                    decom_next_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.next_state), dtype=np.uint8).reshape((1,4,84,84)))
-                    next_states.append(decom_next_state.to(device))
-                    dones.append(torch.FloatTensor([real_data.done]).to(device))
-                    batch_weights.append(torch.FloatTensor([v['w'][real_data.idx]]).to(device))
-                    batch_idxes.append(v['i'][real_data.idx])
-                    #is the data overwrited?
-                    batch_timestamp_store.append(v['t'][real_data.idx])
-                    batch_timestamp_real.append(real_data.timestamp)
+        for k, v in real_data_links.items():
+            for real_data in v:
+                decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.state), dtype=np.uint8).reshape((1,4,84,84)))
+                states.append(decom_state.to(device))
+                actions.append(torch.LongTensor([real_data.action]).to(device))
+                rewards.append(torch.FloatTensor([real_data.reward]).to(device))
+                decom_next_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.next_state), dtype=np.uint8).reshape((1,4,84,84)))
+                next_states.append(decom_next_state.to(device))
+                dones.append(torch.FloatTensor([real_data.done]).to(device))
+                batch_weights.append(torch.FloatTensor([actor_set[k]['w'][real_data.idx]]).to(device))
+                batch_idxes.append(actor_set[k]['i'][real_data.idx])
+                #is the data overwrited?
+                batch_timestamp_store.append(actor_set[k]['t'][real_data.idx])
+                batch_timestamp_real.append(real_data.timestamp)
 
         #print((np.array(batch_timestamp_real)==np.array(batch_timestamp_store)).all())
 
