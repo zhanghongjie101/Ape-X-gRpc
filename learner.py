@@ -52,6 +52,8 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
         batch_weights = []
         batch_idxes = []
 
+        states, actions, rewards, next_states, dones = [], [], [], [], []
+
         res_batch = client.Send(apex_data_pb2.SampleDataRequest(batch_size=args.batch_size, beta = args.beta))
         actor_ids, data_ids, timestamps, weights, idxes = res_batch.actor_ids, res_batch.data_ids, res_batch.timestamp, res_batch.weights, res_batch.idxes
         actor_set = {}
@@ -77,31 +79,29 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             if client != False:
                 real_datas = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
                 for real_data in real_datas:
-                    batch_data.append(real_data)
-                    batch_timestamp_real.append(real_data.timestamp)
-                    batch_weights.append(v['w'][real_data.idx])
+                    decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.state), dtype=np.uint8).reshape((1,4,84,84)))
+                    states.append(decom_state.to(device))
+                    actions.append(torch.LongTensor([real_data.action]).to(device))
+                    rewards.append(torch.FloatTensor([real_data.reward]).to(device))
+                    decom_next_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.next_state), dtype=np.uint8).reshape((1,4,84,84)))
+                    next_states.append(decom_next_state.to(device))
+                    dones.append(torch.FloatTensor([real_data.done]).to(device))
+                    batch_weights.append(torch.FloatTensor([v['w'][real_data.idx]]).to(device))
                     batch_idxes.append(v['i'][real_data.idx])
+                    #is the data overwrited?
                     batch_timestamp_store.append(v['t'][real_data.idx])
+                    batch_timestamp_real.append(real_data.timestamp)
 
         #print((np.array(batch_timestamp_real)==np.array(batch_timestamp_store)).all())
 
-        states, actions, rewards, next_states, dones = [], [], [], [], []
-        for i in range(len(batch_weights)):
-            states.append(batch_data[i].state)
-            actions.append(batch_data[i].action)
-            rewards.append(batch_data[i].reward)
-            next_states.append(batch_data[i].next_state)
-            dones.append(batch_data[i].done)
-        states = np.array([np.frombuffer(zlib.decompress(state), dtype=np.uint8).reshape((4,84,84)) for state in states])
-        states = torch.FloatTensor(states).to(device)
-        actions = torch.LongTensor(actions).to(device)
-        rewards = torch.FloatTensor(rewards).to(device)
-        next_states = np.array([np.frombuffer(zlib.decompress(state), dtype=np.uint8).reshape((4,84,84)) for state in next_states])
-        next_states = torch.FloatTensor(next_states).to(device)
-        dones = torch.FloatTensor(dones).to(device)
-        weights = torch.FloatTensor(batch_weights).to(device)
+        states = torch.cat(states,0)
+        actions = torch.cat(actions,0)
+        rewards = torch.cat(rewards,0)
+        next_states = torch.cat(next_states,0)
+        dones = torch.cat(dones,0)
+        batch_weights = torch.cat(batch_weights,0)
 
-        batch = [states, actions, rewards, next_states, dones, weights, batch_idxes]
+        batch = [states, actions, rewards, next_states, dones, batch_weights, batch_idxes]
         batch_queue.put(batch)
         data, batch = None, None
 

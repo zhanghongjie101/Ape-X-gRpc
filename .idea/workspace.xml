@@ -3,20 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0a760609-549e-40ee-b40a-49c9ffa7547a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/actor.py" beforeDir="false" afterPath="$PROJECT_DIR$/actor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apex_data.proto" beforeDir="false" afterPath="$PROJECT_DIR$/apex_data.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apex_data_pb2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apex_data_pb2_grpc.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arguments.py" beforeDir="false" afterPath="$PROJECT_DIR$/arguments.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learner.py" beforeDir="false" afterPath="$PROJECT_DIR$/learner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/memory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.pth" beforeDir="false" afterPath="$PROJECT_DIR$/model.pth" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/replay.py" beforeDir="false" afterPath="$PROJECT_DIR$/replay.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor4/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor4/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor5/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor5/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor6/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor6/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor7/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-46_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-actor7/events.out.tfevents.1578713146.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runs/Jan11_11-25-54_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-learner/events.out.tfevents.1578713154.cloudlab210-SYS-7049GP-TRT" beforeDir="false" afterPath="$PROJECT_DIR$/runs/Jan11_11-25-54_cloudlab210-SYS-7049GP-TRT-SeaquestNoFrameskip-v4-learner/events.out.tfevents.1578713154.cloudlab210-SYS-7049GP-TRT" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,15 +15,15 @@
     <session id="219483632">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
-          <entry key="project.open.time.0" value="3" />
+          <entry key="project.closed" value="4" />
+          <entry key="project.open.time.0" value="4" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.5" value="5" />
-          <entry key="project.open.time.6" value="3" />
+          <entry key="project.open.time.6" value="4" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="17" />
+          <entry key="project.opened" value="19" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -56,7 +43,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="proto" value="1506" />
-          <entry key="py" value="8192" />
+          <entry key="py" value="8407" />
           <entry key="sh" value="83" />
         </counts>
       </usages-collector>
@@ -65,7 +52,7 @@
           <entry key="Bash" value="83" />
           <entry key="PLAIN_TEXT" value="1221" />
           <entry key="PROTO" value="285" />
-          <entry key="Python" value="8192" />
+          <entry key="Python" value="8407" />
         </counts>
       </usages-collector>
     </session>
@@ -75,8 +62,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/actor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="709">
-              <caret line="144" column="38" selection-start-line="144" selection-start-column="38" selection-end-line="144" selection-end-column="38" />
+            <state relative-caret-position="-345">
+              <caret line="76" column="8" selection-start-line="76" selection-start-column="8" selection-end-line="76" selection-end-column="8" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -96,12 +83,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/learner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="85" column="9" selection-start-line="85" selection-start-column="9" selection-end-line="85" selection-end-column="9" />
+            <state relative-caret-position="709">
+              <caret line="99" column="46" lean-forward="true" selection-start-line="99" selection-start-column="46" selection-end-line="99" selection-end-column="46" />
               <folding>
                 <element signature="e#37#48#0" expanded="true" />
-                <marker date="1578885673861" expanded="true" signature="5059:5289" ph="..." />
-                <marker date="1578885673861" expanded="true" signature="8181:8184" ph="..." />
+                <marker date="1578905626821" expanded="true" signature="5116:5346" ph="..." />
+                <marker date="1578905626821" expanded="true" signature="8238:8241" ph="..." />
               </folding>
             </state>
           </provider>
@@ -110,7 +97,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
+            <state relative-caret-position="195">
               <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
               <folding>
                 <element signature="e#39#52#0" expanded="true" />
@@ -122,7 +109,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/arguments.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="649">
+            <state relative-caret-position="1095">
               <caret line="74" column="70" selection-start-line="74" selection-start-column="70" selection-end-line="74" selection-end-column="70" />
             </state>
           </provider>
@@ -131,7 +118,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apex_data.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
+            <state relative-caret-position="510">
               <caret line="34" column="19" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="19" />
             </state>
           </provider>
@@ -140,7 +127,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/replay.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="661">
+            <state relative-caret-position="1515">
               <caret line="101" column="146" selection-start-line="101" selection-start-column="146" selection-end-line="101" selection-end-column="146" />
               <folding>
                 <element signature="e#76#100#0" expanded="true" />
@@ -155,7 +142,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/memory.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1546">
+            <state relative-caret-position="5460">
               <caret line="367" column="75" selection-start-line="367" selection-start-column="75" selection-end-line="367" selection-end-column="75" />
             </state>
           </provider>
@@ -190,14 +177,14 @@
         <option value="$PROJECT_DIR$/run_replay.sh" />
         <option value="$PROJECT_DIR$/arguments.py" />
         <option value="$PROJECT_DIR$/apex_data.proto" />
-        <option value="$PROJECT_DIR$/actor.py" />
         <option value="$PROJECT_DIR$/memory.py" />
         <option value="$PROJECT_DIR$/replay.py" />
+        <option value="$PROJECT_DIR$/actor.py" />
         <option value="$PROJECT_DIR$/learner.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="1920" />
     <option name="width" value="1920" />
     <option name="height" value="1040" />
@@ -348,6 +335,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/actor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-345">
+          <caret line="76" column="8" selection-start-line="76" selection-start-column="8" selection-end-line="76" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/run_learner.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -357,7 +354,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
+        <state relative-caret-position="195">
           <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
           <folding>
             <element signature="e#39#52#0" expanded="true" />
@@ -365,23 +362,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/memory.py">
+    <entry file="file://$PROJECT_DIR$/arguments.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1546">
-          <caret line="367" column="75" selection-start-line="367" selection-start-column="75" selection-end-line="367" selection-end-column="75" />
+        <state relative-caret-position="1095">
+          <caret line="74" column="70" selection-start-line="74" selection-start-column="70" selection-end-line="74" selection-end-column="70" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/arguments.py">
+    <entry file="file://$PROJECT_DIR$/apex_data.proto">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="649">
-          <caret line="74" column="70" selection-start-line="74" selection-start-column="70" selection-end-line="74" selection-end-column="70" />
+        <state relative-caret-position="510">
+          <caret line="34" column="19" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/replay.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="661">
+        <state relative-caret-position="1515">
           <caret line="101" column="146" selection-start-line="101" selection-start-column="146" selection-end-line="101" selection-end-column="146" />
           <folding>
             <element signature="e#76#100#0" expanded="true" />
@@ -392,31 +389,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apex_data.proto">
+    <entry file="file://$PROJECT_DIR$/memory.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
-          <caret line="34" column="19" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/actor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="144" column="38" selection-start-line="144" selection-start-column="38" selection-end-line="144" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="5460">
+          <caret line="367" column="75" selection-start-line="367" selection-start-column="75" selection-end-line="367" selection-end-column="75" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/learner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="85" column="9" selection-start-line="85" selection-start-column="9" selection-end-line="85" selection-end-column="9" />
+        <state relative-caret-position="709">
+          <caret line="99" column="46" lean-forward="true" selection-start-line="99" selection-start-column="46" selection-end-line="99" selection-end-column="46" />
           <folding>
             <element signature="e#37#48#0" expanded="true" />
-            <marker date="1578885673861" expanded="true" signature="5059:5289" ph="..." />
-            <marker date="1578885673861" expanded="true" signature="8181:8184" ph="..." />
+            <marker date="1578905626821" expanded="true" signature="5116:5346" ph="..." />
+            <marker date="1578905626821" expanded="true" signature="8238:8241" ph="..." />
           </folding>
         </state>
       </provider>
