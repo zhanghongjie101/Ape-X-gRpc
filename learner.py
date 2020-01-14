@@ -24,6 +24,7 @@ import grpc
 import apex_data_pb2, apex_data_pb2_grpc
 from concurrent.futures import ThreadPoolExecutor
 import copy
+import threading
 
 def get_environ():
     n_actors = int(os.environ.get('N_ACTORS', '-1'))
@@ -41,12 +42,26 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
     """
     receive batch from replay and transfer batch from cpu to gpu
     """
+    def recv_data(k, data_stream, actor_set, real_data_tasks_i):
+        for real_data in data_stream:
+            decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.state), dtype=np.uint8).reshape((1, 4, 84, 84)))
+            real_data_tasks_i['states'].append(decom_state) #.to(device))
+            real_data_tasks_i['actions'].append(torch.LongTensor([real_data.action])) #.to(device))
+            real_data_tasks_i['rewards'].append(torch.FloatTensor([real_data.reward])) #.to(device))
+            decom_next_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.next_state), dtype=np.uint8).reshape((1, 4, 84, 84)))
+            real_data_tasks_i['next_states'].append(decom_next_state) #.to(device))
+            real_data_tasks_i['dones'].append(torch.FloatTensor([real_data.done])) #.to(device))
+            real_data_tasks_i['batch_weights'].append(torch.FloatTensor([actor_set[k]['w'][real_data.idx]])) #.to(device))
+            real_data_tasks_i['batch_idxes'].append(actor_set[k]['i'][real_data.idx])
+            # is the data overwrited?
+            real_data_tasks_i['batch_timestamp_store'].append(actor_set[k]['t'][real_data.idx])
+            real_data_tasks_i['batch_timestamp_real'].append(real_data.timestamp)
+
     conn = grpc.insecure_channel(port_dict['replay_ip'] + ':' + port_dict['sampleDataPort'])
     client = apex_data_pb2_grpc.SampleDataStub(channel=conn)
 
     while True:
         #start = time.time()
-        batch_data = []
         batch_timestamp_real = []
         batch_timestamp_store =[]
         batch_weights = []
@@ -72,35 +87,50 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             set_a['t'].append(timestamps[i])
 
         real_data_links = {}
+        real_data_tasks = {}
         for k, v in actor_set.items():
             actor_ip, data_port = actor_id_to_ip_dataport[k]
             conn_actor = grpc.insecure_channel(actor_ip + ':' + data_port)
             client_actor = apex_data_pb2_grpc.SendRealDataStub(channel=conn_actor)
             real_data_links[k] = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
-
+            real_data_tasks[k] = {}
+            real_data_tasks[k]['states'] = []
+            real_data_tasks[k]['actions'] = []
+            real_data_tasks[k]['rewards'] = []
+            real_data_tasks[k]['next_states'] = []
+            real_data_tasks[k]['dones'] = []
+            real_data_tasks[k]['batch_weights'] = []
+            real_data_tasks[k]['batch_idxes'] = []
+            real_data_tasks[k]['batch_timestamp_store'] = []
+            real_data_tasks[k]['batch_timestamp_real'] = []
+        threads = []
         for k, v in real_data_links.items():
-            for real_data in v:
-                decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.state), dtype=np.uint8).reshape((1,4,84,84)))
-                states.append(decom_state.to(device))
-                actions.append(torch.LongTensor([real_data.action]).to(device))
-                rewards.append(torch.FloatTensor([real_data.reward]).to(device))
-                decom_next_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.next_state), dtype=np.uint8).reshape((1,4,84,84)))
-                next_states.append(decom_next_state.to(device))
-                dones.append(torch.FloatTensor([real_data.done]).to(device))
-                batch_weights.append(torch.FloatTensor([actor_set[k]['w'][real_data.idx]]).to(device))
-                batch_idxes.append(actor_set[k]['i'][real_data.idx])
-                #is the data overwrited?
-                batch_timestamp_store.append(actor_set[k]['t'][real_data.idx])
-                batch_timestamp_real.append(real_data.timestamp)
+            t = threading.Thread(target=recv_data, args=(k, v, actor_set, real_data_tasks[k],))
+            threads.append(t)
+            t.start()
+
+        for t in threads:
+            t.join()
+
+        for k, v in real_data_tasks.items():
+            states += v['states']
+            actions += v['actions']
+            rewards += v['rewards']
+            next_states += v['next_states']
+            dones += v['dones']
+            batch_weights += v['batch_weights']
+            batch_idxes += v['batch_idxes']
+            batch_timestamp_real += v['batch_timestamp_real']
+            batch_timestamp_store += v['batch_timestamp_store']
 
         #print((np.array(batch_timestamp_real)==np.array(batch_timestamp_store)).all())
 
-        states = torch.cat(states,0)
-        actions = torch.cat(actions,0)
-        rewards = torch.cat(rewards,0)
-        next_states = torch.cat(next_states,0)
-        dones = torch.cat(dones,0)
-        batch_weights = torch.cat(batch_weights,0)
+        states = torch.cat(states,0).to(device)
+        actions = torch.cat(actions,0).to(device)
+        rewards = torch.cat(rewards,0).to(device)
+        next_states = torch.cat(next_states,0).to(device)
+        dones = torch.cat(dones,0).to(device)
+        batch_weights = torch.cat(batch_weights,0).to(device)
 
         batch = [states, actions, rewards, next_states, dones, batch_weights, batch_idxes]
         batch_queue.put(batch)
