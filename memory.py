@@ -151,7 +151,7 @@ class ReplayBuffer(object):
             Max number of transitions to store in the buffer. When the buffer
             overflows the old memories are dropped.
         """
-        self._storage = []
+        self._storage = [0 for i in range(size)]
         self._maxsize = size
         self._next_idx = 0
 
@@ -326,8 +326,9 @@ class CustomPrioritizedReplayBuffer(PrioritizedReplayBuffer):
     2. If we save obs as numpy.array, this will decompress LazyFrame which leads to memory explosion.
     To achieve memory efficiency, It is necessary to remove np.array(obs) from _encode_sample.
     """
-    def __init__(self, size, alpha):
+    def __init__(self, size, alpha, n_actors):
         super(CustomPrioritizedReplayBuffer, self).__init__(size, alpha)
+        self.n_actors = n_actors
     '''
     def add(self, state, action, reward, next_state, done, priority):
         idx = self._next_idx
@@ -344,15 +345,18 @@ class CustomPrioritizedReplayBuffer(PrioritizedReplayBuffer):
         self._max_priority = max(self._max_priority, priority)
     '''
     def add(self, actor_id, data_id, priori, timestamp):
-        idx = self._next_idx
+        #idx = self._next_idx
         data = (actor_id, data_id, timestamp)
 
-        if self._next_idx >= len(self._storage):
-            self._storage.append(data)
-        else:
-            self._storage[self._next_idx] = data
-        self._next_idx = (self._next_idx + 1) % self._maxsize
+        #if self._next_idx >= len(self._storage):
+        #    self._storage.append(data)
+        #else:
+        #    self._storage[self._next_idx] = data
+        #self._next_idx = (self._next_idx + 1) % self._maxsize
 
+        idx = actor_id * (self._maxsize//self.n_actors) + data_id
+        self._storage[idx] = data
+         
         self._it_sum[idx] = priori ** self._alpha
         self._it_min[idx] = priori ** self._alpha
         self._max_priority = max(self._max_priority, priori)

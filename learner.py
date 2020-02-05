@@ -63,7 +63,7 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
     while True:
         #start = time.time()
         batch_timestamp_real = []
-        batch_timestamp_store =[]
+        batch_timestamp_store = []
         batch_weights = []
         batch_idxes = []
 
@@ -104,6 +104,7 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             real_data_tasks[k]['batch_timestamp_store'] = []
             real_data_tasks[k]['batch_timestamp_real'] = []
         threads = []
+        #start = time.time()
         for k, v in real_data_links.items():
             t = threading.Thread(target=recv_data, args=(k, v, actor_set, real_data_tasks[k],))
             threads.append(t)
@@ -111,6 +112,8 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
 
         for t in threads:
             t.join()
+        #end = time.time()
+        #print("recv data time: {}".format(end - start))
 
         for k, v in real_data_tasks.items():
             states += v['states']
@@ -124,13 +127,15 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             batch_timestamp_store += v['batch_timestamp_store']
 
         #print((np.array(batch_timestamp_real)==np.array(batch_timestamp_store)).all())
-
+        #start = time.time()
         states = torch.cat(states,0).to(device)
         actions = torch.cat(actions,0).to(device)
         rewards = torch.cat(rewards,0).to(device)
         next_states = torch.cat(next_states,0).to(device)
         dones = torch.cat(dones,0).to(device)
         batch_weights = torch.cat(batch_weights,0).to(device)
+        #end = time.time()
+        #print("to device time: {}".format(end-start))
 
         batch = [states, actions, rewards, next_states, dones, batch_weights, batch_idxes]
         batch_queue.put(batch)

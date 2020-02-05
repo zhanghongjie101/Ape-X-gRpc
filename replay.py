@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
     args = argparser()
     utils.set_global_seeds(args.seed, use_torch=False)
-    buffer = CustomPrioritizedReplayBuffer(args.replay_buffer_size, args.alpha)
+    buffer = CustomPrioritizedReplayBuffer(args.replay_buffer_size, args.alpha, n_actors)
     event = Event()
     lock = Lock()
 
