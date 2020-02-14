@@ -254,3 +254,45 @@ def add_RegisterActorServicer_to_server(servicer, server):
   generic_handler = grpc.method_handlers_generic_handler(
       'apex.RegisterActor', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))
+
+
+class CacheUpdateStub(object):
+  # missing associated documentation comment in .proto file
+  pass
+
+  def __init__(self, channel):
+    """Constructor.
+
+    Args:
+      channel: A grpc.Channel.
+    """
+    self.Send = channel.unary_unary(
+        '/apex.CacheUpdate/Send',
+        request_serializer=apex__data__pb2.CacheUpdateRequest.SerializeToString,
+        response_deserializer=apex__data__pb2.CacheUpdateResponse.FromString,
+        )
+
+
+class CacheUpdateServicer(object):
+  # missing associated documentation comment in .proto file
+  pass
+
+  def Send(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+
+def add_CacheUpdateServicer_to_server(servicer, server):
+  rpc_method_handlers = {
+      'Send': grpc.unary_unary_rpc_method_handler(
+          servicer.Send,
+          request_deserializer=apex__data__pb2.CacheUpdateRequest.FromString,
+          response_serializer=apex__data__pb2.CacheUpdateResponse.SerializeToString,
+      ),
+  }
+  generic_handler = grpc.method_handlers_generic_handler(
+      'apex.CacheUpdate', rpc_method_handlers)
+  server.add_generic_rpc_handlers((generic_handler,))

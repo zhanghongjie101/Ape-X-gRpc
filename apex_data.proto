@@ -79,6 +79,14 @@ message ActorRegisterResponse{
     bool response = 1;
 }
 
+message CacheUpdateRequest{
+    repeated int32 idxes = 1;
+}
+
+message CacheUpdateResponse{
+    bool response = 1;
+}
+
 service SendBatchPriori{
     rpc Send(BatchPrioriRequest) returns (BatchPrioriResponse) {}
 }
@@ -101,4 +109,8 @@ service SendParameter{
 
 service RegisterActor{
     rpc Send(ActorRegisterRequest) returns (ActorRegisterResponse) {}
+}
+
+service CacheUpdate{
+    rpc Send(CacheUpdateRequest) returns (CacheUpdateResponse) {}
 }

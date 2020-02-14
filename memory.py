@@ -326,9 +326,9 @@ class CustomPrioritizedReplayBuffer(PrioritizedReplayBuffer):
     2. If we save obs as numpy.array, this will decompress LazyFrame which leads to memory explosion.
     To achieve memory efficiency, It is necessary to remove np.array(obs) from _encode_sample.
     """
-    def __init__(self, size, alpha, n_actors):
+    def __init__(self, size, alpha, nactors):
         super(CustomPrioritizedReplayBuffer, self).__init__(size, alpha)
-        self.n_actors = n_actors
+        self.n_actors = nactors
     '''
     def add(self, state, action, reward, next_state, done, priority):
         idx = self._next_idx
@@ -356,7 +356,7 @@ class CustomPrioritizedReplayBuffer(PrioritizedReplayBuffer):
 
         idx = actor_id * (self._maxsize//self.n_actors) + data_id
         self._storage[idx] = data
-         
+
         self._it_sum[idx] = priori ** self._alpha
         self._it_min[idx] = priori ** self._alpha
         self._max_priority = max(self._max_priority, priori)

@@ -9,7 +9,7 @@ import queue
 
 import torch
 import torch.multiprocessing as mp
-from torch.multiprocessing import Process, Queue, Manager
+from torch.multiprocessing import Process, Queue, Manager, Lock, Array
 from tensorboardX import SummaryWriter
 import numpy as np
 from wrapper import make_atari, wrap_atari_dqn
@@ -35,15 +35,28 @@ def get_environ():
     updatePrioriPort = os.environ.get('UPDATEPRIORIPORT', '-1')
     sampleDataPort = os.environ.get('SAMPLEDATAPORT', '-1')
     parameterPort = os.environ.get('PARAMETERPORT', '-1')
-    return n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, parameterPort
+    cacheUpdatePort = os.environ.get('CACHEUPDATEPORT', '-1')
+    return n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, parameterPort, cacheUpdatePort
 
 
-def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
+def sample_batch(pid, args, batch_queue, port_dict, device, actor_id_to_ip_dataport, local_size, cache_array):
     """
     receive batch from replay and transfer batch from cpu to gpu
     """
     def recv_data(k, data_stream, actor_set, real_data_tasks_i):
         for real_data in data_stream:
+            tmp = []
+            tmp.append(real_data.state)
+            tmp.append(real_data.action)
+            tmp.append(real_data.reward)
+            tmp.append(real_data.next_state)
+            tmp.append(real_data.done)
+            tmp.append(actor_set[k]['w'][real_data.idx])
+            tmp.append(actor_set[k]['i'][real_data.idx])
+            tmp.append(actor_set[k]['t'][real_data.idx])
+            tmp.append(real_data.timestamp)
+            local_dict[actor_set[k]['i'][real_data.idx]] = tmp
+            cache_array[actor_set[k]['i'][real_data.idx]] |= 2**pid
             decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(real_data.state), dtype=np.uint8).reshape((1, 4, 84, 84)))
             real_data_tasks_i['states'].append(decom_state) #.to(device))
             real_data_tasks_i['actions'].append(torch.LongTensor([real_data.action])) #.to(device))
@@ -56,12 +69,10 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             # is the data overwrited?
             real_data_tasks_i['batch_timestamp_store'].append(actor_set[k]['t'][real_data.idx])
             real_data_tasks_i['batch_timestamp_real'].append(real_data.timestamp)
-
     conn = grpc.insecure_channel(port_dict['replay_ip'] + ':' + port_dict['sampleDataPort'])
     client = apex_data_pb2_grpc.SampleDataStub(channel=conn)
-
+    local_dict = {}
     while True:
-        #start = time.time()
         batch_timestamp_real = []
         batch_timestamp_store = []
         batch_weights = []
@@ -72,6 +83,7 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
         res_batch = client.Send(apex_data_pb2.SampleDataRequest(batch_size=args.batch_size, beta = args.beta))
         actor_ids, data_ids, timestamps, weights, idxes = res_batch.actor_ids, res_batch.data_ids, res_batch.timestamp, res_batch.weights, res_batch.idxes
         actor_set = {}
+        cached_value = {'states':{},'actions':{},'rewards':{},'next_states':{},'dones':{},'batch_weights':{},'batch_idxes':{},'batch_timestamp_store':{},'batch_timestamp_real':{}}
         for i in range(len(actor_ids)):
             set_a = actor_set.get(actor_ids[i], False)
             if set_a == False:
@@ -81,11 +93,51 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
                 set_a['w'] = []
                 set_a['i'] = []
                 set_a['t'] = []
-            set_a['d'].append(data_ids[i])
-            set_a['w'].append(weights[i])
-            set_a['i'].append(idxes[i])
-            set_a['t'].append(timestamps[i])
-
+                cached_value['states'][actor_ids[i]] = []
+                cached_value['actions'][actor_ids[i]] = []
+                cached_value['rewards'][actor_ids[i]] = []
+                cached_value['next_states'][actor_ids[i]] = []
+                cached_value['dones'][actor_ids[i]] = []
+                cached_value['batch_weights'][actor_ids[i]] = []
+                cached_value['batch_idxes'][actor_ids[i]] = []
+                cached_value['batch_timestamp_store'][actor_ids[i]] = []
+                cached_value['batch_timestamp_real'][actor_ids[i]] = []
+            cache_id = actor_ids[i]*local_size+data_ids[i]
+            cache_trans = cache_array[cache_id]
+            if cache_trans & 2**pid == 0:
+                set_a['d'].append(data_ids[i])
+                set_a['w'].append(weights[i])
+                set_a['i'].append(idxes[i])
+                set_a['t'].append(timestamps[i])
+                if cache_trans == 0 and local_dict.get(cache_id, False) != False:
+                    del local_dict[cache_id]
+            else:
+                try:
+                    state_tmp = local_dict[cache_id][0]
+                    action_tmp = local_dict[cache_id][1]
+                    reward_tmp = local_dict[cache_id][2] 
+                    next_state_tmp = local_dict[cache_id][3] 
+                    done_tmp = local_dict[cache_id][4] 
+                    batch_weight_tmp = local_dict[cache_id][5] 
+                    batch_idx_tmp = local_dict[cache_id][6] 
+                    batch_store_tmp = local_dict[cache_id][7] 
+                    batch_real_tmp = local_dict[cache_id][8] 
+                    decom_state = torch.FloatTensor(np.frombuffer(zlib.decompress(state_tmp), dtype=np.uint8).reshape((1, 4, 84, 84)))
+                    cached_value['states'][actor_ids[i]].append(decom_state)
+                    cached_value['actions'][actor_ids[i]].append(torch.LongTensor([action_tmp]))
+                    cached_value['rewards'][actor_ids[i]].append(torch.FloatTensor([reward_tmp]))
+                    decom_next_state = torch.FloatTensor(np.frombuffer(zlib.decompress(next_state_tmp), dtype=np.uint8).reshape((1, 4, 84, 84)))
+                    cached_value['next_states'][actor_ids[i]].append(decom_next_state)
+                    cached_value['dones'][actor_ids[i]].append(torch.FloatTensor([done_tmp]))
+                    cached_value['batch_weights'][actor_ids[i]].append(torch.FloatTensor([batch_weight_tmp]))
+                    cached_value['batch_idxes'][actor_ids[i]].append(batch_idx_tmp)
+                    cached_value['batch_timestamp_store'][actor_ids[i]].append(batch_store_tmp)
+                    cached_value['batch_timestamp_real'][actor_ids[i]].append(batch_real_tmp)
+                except:
+                    set_a['d'].append(data_ids[i])
+                    set_a['w'].append(weights[i])
+                    set_a['i'].append(idxes[i])
+                    set_a['t'].append(timestamps[i])
         real_data_links = {}
         real_data_tasks = {}
         for k, v in actor_set.items():
@@ -94,17 +146,16 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             client_actor = apex_data_pb2_grpc.SendRealDataStub(channel=conn_actor)
             real_data_links[k] = client_actor.Send(apex_data_pb2.RealBatchRequest(idxes=v['d']))
             real_data_tasks[k] = {}
-            real_data_tasks[k]['states'] = []
-            real_data_tasks[k]['actions'] = []
-            real_data_tasks[k]['rewards'] = []
-            real_data_tasks[k]['next_states'] = []
-            real_data_tasks[k]['dones'] = []
-            real_data_tasks[k]['batch_weights'] = []
-            real_data_tasks[k]['batch_idxes'] = []
-            real_data_tasks[k]['batch_timestamp_store'] = []
-            real_data_tasks[k]['batch_timestamp_real'] = []
+            real_data_tasks[k]['states'] = cached_value['states'][k]
+            real_data_tasks[k]['actions'] = cached_value['actions'][k]
+            real_data_tasks[k]['rewards'] = cached_value['rewards'][k]
+            real_data_tasks[k]['next_states'] = cached_value['next_states'][k]
+            real_data_tasks[k]['dones'] = cached_value['dones'][k]
+            real_data_tasks[k]['batch_weights'] = cached_value['batch_weights'][k]
+            real_data_tasks[k]['batch_idxes'] = cached_value['batch_idxes'][k]
+            real_data_tasks[k]['batch_timestamp_store'] = cached_value['batch_timestamp_store'][k]
+            real_data_tasks[k]['batch_timestamp_real'] = cached_value['batch_timestamp_real'][k]
         threads = []
-        #start = time.time()
         for k, v in real_data_links.items():
             t = threading.Thread(target=recv_data, args=(k, v, actor_set, real_data_tasks[k],))
             threads.append(t)
@@ -112,8 +163,6 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
 
         for t in threads:
             t.join()
-        #end = time.time()
-        #print("recv data time: {}".format(end - start))
 
         for k, v in real_data_tasks.items():
             states += v['states']
@@ -126,16 +175,12 @@ def sample_batch(args, batch_queue, port_dict, device, actor_id_to_ip_dataport):
             batch_timestamp_real += v['batch_timestamp_real']
             batch_timestamp_store += v['batch_timestamp_store']
 
-        #print((np.array(batch_timestamp_real)==np.array(batch_timestamp_store)).all())
-        #start = time.time()
         states = torch.cat(states,0).to(device)
         actions = torch.cat(actions,0).to(device)
         rewards = torch.cat(rewards,0).to(device)
         next_states = torch.cat(next_states,0).to(device)
         dones = torch.cat(dones,0).to(device)
         batch_weights = torch.cat(batch_weights,0).to(device)
-        #end = time.time()
-        #print("to device time: {}".format(end-start))
 
         batch = [states, actions, rewards, next_states, dones, batch_weights, batch_idxes]
         batch_queue.put(batch)
@@ -234,13 +279,25 @@ class RegisterActor(apex_data_pb2_grpc.RegisterActorServicer):
         response = apex_data_pb2.ActorRegisterResponse(response=True)
         return response
 
+class CacheUpdate(apex_data_pb2_grpc.CacheUpdateServicer):
+    def Send(self, request, context):
+        idxes = request.idxes
+        for i in idxes:
+            c_data = cache_array[i]
+            if c_data == 0:
+                continue
+            else:
+                cache_array[i] = 0
+        response = apex_data_pb2.CacheUpdateResponse(response=True)
+        return response
+
 
 if __name__ == '__main__':
     mp.set_start_method('spawn')
     """
     environment parameters
     """
-    n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, parameterPort = get_environ()
+    n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, parameterPort, cacheUpdatePort = get_environ()
 
     args = argparser()
 
@@ -252,7 +309,11 @@ if __name__ == '__main__':
     port_dict['updatePrioriPort'] = updatePrioriPort
     port_dict['sampleDataPort'] = sampleDataPort
     port_dict['parameterPort'] = parameterPort
+    port_dict['cacheUpdatePort'] = cacheUpdatePort
 
+    local_buffer_size = args.replay_buffer_size//n_actors
+    cache_array = Array('i', args.replay_buffer_size)
+    
     # TODO: Need to adjust the maxsize of prios, param queue
     batch_queue = Queue(maxsize=args.queue_size)
     prios_queue = Queue(maxsize=args.prios_queue_size)
@@ -279,6 +340,14 @@ if __name__ == '__main__':
     sendParameterServer.add_insecure_port(learner_ip + ':' + parameterPort)
     sendParameterServer.start()
     print("ready for parameter server")
+
+	# cacheUpdatePort = '8000'
+    cacheUpdateServer = grpc.server(ThreadPoolExecutor(max_workers=4))
+    apex_data_pb2_grpc.add_CacheUpdateServicer_to_server(CacheUpdate(), cacheUpdateServer)
+    cacheUpdateServer.add_insecure_port(learner_ip + ':' + cacheUpdatePort)
+    cacheUpdateServer.start()
+    print("ready for cache update server")
+    
     procs = [
         Process(target=train, args=(args, n_actors, batch_queue, prios_queue, param_queue)),
     ]
@@ -287,8 +356,8 @@ if __name__ == '__main__':
         p = Process(target=update_prios, args=(prios_queue, port_dict))
         procs.append(p)
 
-    for _ in range(args.n_recv_batch_process):
-        p = Process(target=sample_batch, args=(args, batch_queue, port_dict, args.device, actor_id_to_ip_dataport))
+    for i in range(args.n_recv_batch_process):
+        p = Process(target=sample_batch, args=(i, args, batch_queue, port_dict, args.device, actor_id_to_ip_dataport, local_buffer_size, cache_array))
         procs.append(p)
     for p in procs:
         p.start()

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='apex',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0f\x61pex_data.proto\x12\x04\x61pex\"Y\n\x12\x42\x61tchPrioriRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\x12\x0f\n\x07prioris\x18\x02 \x03(\x02\x12\x10\n\x08\x61\x63tor_id\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x03(\x02\"\'\n\x13\x42\x61tchPrioriResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"5\n\x13UpdatePrioriRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\x12\x0f\n\x07prioris\x18\x02 \x03(\x02\"(\n\x14UpdatePrioriResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"!\n\x10RealBatchRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\"\x83\x01\n\x10RealDataResponse\x12\r\n\x05state\x18\x01 \x01(\x0c\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\x05\x12\x0e\n\x06reward\x18\x03 \x01(\x02\x12\x12\n\nnext_state\x18\x04 \x01(\x0c\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x0b\n\x03idx\x18\x06 \x01(\x05\x12\x11\n\ttimestamp\x18\x07 \x01(\x02\"&\n\x11ParametersRequest\x12\x11\n\tparam_req\x18\x01 \x01(\x08\"=\n\x0fSingleParameter\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x0e\n\x06values\x18\x02 \x03(\x02\x12\r\n\x05shape\x18\x03 \x03(\x05\"5\n\x11SampleDataRequest\x12\x12\n\nbatch_size\x18\x01 \x01(\x05\x12\x0c\n\x04\x62\x65ta\x18\x02 \x01(\x02\"l\n\x12SampleDataResponse\x12\x11\n\tactor_ids\x18\x01 \x03(\x05\x12\x10\n\x08\x64\x61ta_ids\x18\x02 \x03(\x05\x12\x11\n\ttimestamp\x18\x03 \x03(\x02\x12\x0f\n\x07weights\x18\x04 \x03(\x02\x12\r\n\x05idxes\x18\x05 \x03(\x05\"\x9b\x01\n\x18SampleSingleDataResponse\x12\r\n\x05state\x18\x01 \x01(\x0c\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\x05\x12\x0e\n\x06reward\x18\x03 \x01(\x02\x12\x12\n\nnext_state\x18\x04 \x01(\x0c\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x0e\n\x06weight\x18\x06 \x01(\x02\x12\x0b\n\x03idx\x18\x07 \x01(\x05\x12\x11\n\ttimestamp\x18\x08 \x01(\x02\"M\n\x14\x41\x63torRegisterRequest\x12\x10\n\x08\x61\x63tor_ip\x18\x01 \x01(\t\x12\x10\n\x08\x61\x63tor_id\x18\x02 \x01(\x05\x12\x11\n\tdata_port\x18\x03 \x01(\t\")\n\x15\x41\x63torRegisterResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\x32P\n\x0fSendBatchPriori\x12=\n\x04Send\x12\x18.apex.BatchPrioriRequest\x1a\x19.apex.BatchPrioriResponse\"\x00\x32J\n\x0cSendRealData\x12:\n\x04Send\x12\x16.apex.RealBatchRequest\x1a\x16.apex.RealDataResponse\"\x00\x30\x01\x32I\n\nSampleData\x12;\n\x04Send\x12\x17.apex.SampleDataRequest\x1a\x18.apex.SampleDataResponse\"\x00\x32T\n\x11UpdateBatchPriori\x12?\n\x04Send\x12\x19.apex.UpdatePrioriRequest\x1a\x1a.apex.UpdatePrioriResponse\"\x00\x32K\n\rSendParameter\x12:\n\x04Send\x12\x17.apex.ParametersRequest\x1a\x15.apex.SingleParameter\"\x00\x30\x01\x32R\n\rRegisterActor\x12\x41\n\x04Send\x12\x1a.apex.ActorRegisterRequest\x1a\x1b.apex.ActorRegisterResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0f\x61pex_data.proto\x12\x04\x61pex\"Y\n\x12\x42\x61tchPrioriRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\x12\x0f\n\x07prioris\x18\x02 \x03(\x02\x12\x10\n\x08\x61\x63tor_id\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x03(\x02\"\'\n\x13\x42\x61tchPrioriResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"5\n\x13UpdatePrioriRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\x12\x0f\n\x07prioris\x18\x02 \x03(\x02\"(\n\x14UpdatePrioriResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"!\n\x10RealBatchRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\"\x83\x01\n\x10RealDataResponse\x12\r\n\x05state\x18\x01 \x01(\x0c\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\x05\x12\x0e\n\x06reward\x18\x03 \x01(\x02\x12\x12\n\nnext_state\x18\x04 \x01(\x0c\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x0b\n\x03idx\x18\x06 \x01(\x05\x12\x11\n\ttimestamp\x18\x07 \x01(\x02\"&\n\x11ParametersRequest\x12\x11\n\tparam_req\x18\x01 \x01(\x08\"=\n\x0fSingleParameter\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x0e\n\x06values\x18\x02 \x03(\x02\x12\r\n\x05shape\x18\x03 \x03(\x05\"5\n\x11SampleDataRequest\x12\x12\n\nbatch_size\x18\x01 \x01(\x05\x12\x0c\n\x04\x62\x65ta\x18\x02 \x01(\x02\"l\n\x12SampleDataResponse\x12\x11\n\tactor_ids\x18\x01 \x03(\x05\x12\x10\n\x08\x64\x61ta_ids\x18\x02 \x03(\x05\x12\x11\n\ttimestamp\x18\x03 \x03(\x02\x12\x0f\n\x07weights\x18\x04 \x03(\x02\x12\r\n\x05idxes\x18\x05 \x03(\x05\"\x9b\x01\n\x18SampleSingleDataResponse\x12\r\n\x05state\x18\x01 \x01(\x0c\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\x05\x12\x0e\n\x06reward\x18\x03 \x01(\x02\x12\x12\n\nnext_state\x18\x04 \x01(\x0c\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x0e\n\x06weight\x18\x06 \x01(\x02\x12\x0b\n\x03idx\x18\x07 \x01(\x05\x12\x11\n\ttimestamp\x18\x08 \x01(\x02\"M\n\x14\x41\x63torRegisterRequest\x12\x10\n\x08\x61\x63tor_ip\x18\x01 \x01(\t\x12\x10\n\x08\x61\x63tor_id\x18\x02 \x01(\x05\x12\x11\n\tdata_port\x18\x03 \x01(\t\")\n\x15\x41\x63torRegisterResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"#\n\x12\x43\x61\x63heUpdateRequest\x12\r\n\x05idxes\x18\x01 \x03(\x05\"\'\n\x13\x43\x61\x63heUpdateResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\x32P\n\x0fSendBatchPriori\x12=\n\x04Send\x12\x18.apex.BatchPrioriRequest\x1a\x19.apex.BatchPrioriResponse\"\x00\x32J\n\x0cSendRealData\x12:\n\x04Send\x12\x16.apex.RealBatchRequest\x1a\x16.apex.RealDataResponse\"\x00\x30\x01\x32I\n\nSampleData\x12;\n\x04Send\x12\x17.apex.SampleDataRequest\x1a\x18.apex.SampleDataResponse\"\x00\x32T\n\x11UpdateBatchPriori\x12?\n\x04Send\x12\x19.apex.UpdatePrioriRequest\x1a\x1a.apex.UpdatePrioriResponse\"\x00\x32K\n\rSendParameter\x12:\n\x04Send\x12\x17.apex.ParametersRequest\x1a\x15.apex.SingleParameter\"\x00\x30\x01\x32R\n\rRegisterActor\x12\x41\n\x04Send\x12\x1a.apex.ActorRegisterRequest\x1a\x1b.apex.ActorRegisterResponse\"\x00\x32L\n\x0b\x43\x61\x63heUpdate\x12=\n\x04Send\x12\x18.apex.CacheUpdateRequest\x1a\x19.apex.CacheUpdateResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -610,6 +610,68 @@ _ACTORREGISTERRESPONSE = _descriptor.Descriptor(
   serialized_end=969,
 )
 
+
+_CACHEUPDATEREQUEST = _descriptor.Descriptor(
+  name='CacheUpdateRequest',
+  full_name='apex.CacheUpdateRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='idxes', full_name='apex.CacheUpdateRequest.idxes', index=0,
+      number=1, type=5, cpp_type=1, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=971,
+  serialized_end=1006,
+)
+
+
+_CACHEUPDATERESPONSE = _descriptor.Descriptor(
+  name='CacheUpdateResponse',
+  full_name='apex.CacheUpdateResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='response', full_name='apex.CacheUpdateResponse.response', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1008,
+  serialized_end=1047,
+)
+
 DESCRIPTOR.message_types_by_name['BatchPrioriRequest'] = _BATCHPRIORIREQUEST
 DESCRIPTOR.message_types_by_name['BatchPrioriResponse'] = _BATCHPRIORIRESPONSE
 DESCRIPTOR.message_types_by_name['UpdatePrioriRequest'] = _UPDATEPRIORIREQUEST
@@ -623,6 +685,8 @@ DESCRIPTOR.message_types_by_name['SampleDataResponse'] = _SAMPLEDATARESPONSE
 DESCRIPTOR.message_types_by_name['SampleSingleDataResponse'] = _SAMPLESINGLEDATARESPONSE
 DESCRIPTOR.message_types_by_name['ActorRegisterRequest'] = _ACTORREGISTERREQUEST
 DESCRIPTOR.message_types_by_name['ActorRegisterResponse'] = _ACTORREGISTERRESPONSE
+DESCRIPTOR.message_types_by_name['CacheUpdateRequest'] = _CACHEUPDATEREQUEST
+DESCRIPTOR.message_types_by_name['CacheUpdateResponse'] = _CACHEUPDATERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 BatchPrioriRequest = _reflection.GeneratedProtocolMessageType('BatchPrioriRequest', (_message.Message,), {
@@ -716,6 +780,20 @@ ActorRegisterResponse = _reflection.GeneratedProtocolMessageType('ActorRegisterR
   })
 _sym_db.RegisterMessage(ActorRegisterResponse)
 
+CacheUpdateRequest = _reflection.GeneratedProtocolMessageType('CacheUpdateRequest', (_message.Message,), {
+  'DESCRIPTOR' : _CACHEUPDATEREQUEST,
+  '__module__' : 'apex_data_pb2'
+  # @@protoc_insertion_point(class_scope:apex.CacheUpdateRequest)
+  })
+_sym_db.RegisterMessage(CacheUpdateRequest)
+
+CacheUpdateResponse = _reflection.GeneratedProtocolMessageType('CacheUpdateResponse', (_message.Message,), {
+  'DESCRIPTOR' : _CACHEUPDATERESPONSE,
+  '__module__' : 'apex_data_pb2'
+  # @@protoc_insertion_point(class_scope:apex.CacheUpdateResponse)
+  })
+_sym_db.RegisterMessage(CacheUpdateResponse)
+
 
 
 _SENDBATCHPRIORI = _descriptor.ServiceDescriptor(
@@ -724,8 +802,8 @@ _SENDBATCHPRIORI = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=971,
-  serialized_end=1051,
+  serialized_start=1049,
+  serialized_end=1129,
   methods=[
   _descriptor.MethodDescriptor(
     name='Send',
@@ -748,8 +826,8 @@ _SENDREALDATA = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=1053,
-  serialized_end=1127,
+  serialized_start=1131,
+  serialized_end=1205,
   methods=[
   _descriptor.MethodDescriptor(
     name='Send',
@@ -772,8 +850,8 @@ _SAMPLEDATA = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=2,
   serialized_options=None,
-  serialized_start=1129,
-  serialized_end=1202,
+  serialized_start=1207,
+  serialized_end=1280,
   methods=[
   _descriptor.MethodDescriptor(
     name='Send',
@@ -796,8 +874,8 @@ _UPDATEBATCHPRIORI = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=3,
   serialized_options=None,
-  serialized_start=1204,
-  serialized_end=1288,
+  serialized_start=1282,
+  serialized_end=1366,
   methods=[
   _descriptor.MethodDescriptor(
     name='Send',
@@ -820,8 +898,8 @@ _SENDPARAMETER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=4,
   serialized_options=None,
-  serialized_start=1290,
-  serialized_end=1365,
+  serialized_start=1368,
+  serialized_end=1443,
   methods=[
   _descriptor.MethodDescriptor(
     name='Send',
@@ -844,8 +922,8 @@ _REGISTERACTOR = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=5,
   serialized_options=None,
-  serialized_start=1367,
-  serialized_end=1449,
+  serialized_start=1445,
+  serialized_end=1527,
   methods=[
   _descriptor.MethodDescriptor(
     name='Send',
@@ -860,5 +938,29 @@ _REGISTERACTOR = _descriptor.ServiceDescriptor(
 _sym_db.RegisterServiceDescriptor(_REGISTERACTOR)
 
 DESCRIPTOR.services_by_name['RegisterActor'] = _REGISTERACTOR
+
+
+_CACHEUPDATE = _descriptor.ServiceDescriptor(
+  name='CacheUpdate',
+  full_name='apex.CacheUpdate',
+  file=DESCRIPTOR,
+  index=6,
+  serialized_options=None,
+  serialized_start=1529,
+  serialized_end=1605,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='Send',
+    full_name='apex.CacheUpdate.Send',
+    index=0,
+    containing_service=None,
+    input_type=_CACHEUPDATEREQUEST,
+    output_type=_CACHEUPDATERESPONSE,
+    serialized_options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_CACHEUPDATE)
+
+DESCRIPTOR.services_by_name['CacheUpdate'] = _CACHEUPDATE
 
 # @@protoc_insertion_point(module_scope)

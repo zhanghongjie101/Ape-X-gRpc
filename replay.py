@@ -17,11 +17,13 @@ import apex_data_pb2, apex_data_pb2_grpc
 def get_environ():
     n_actors = int(os.environ.get('N_ACTORS', '-1'))
     replay_ip = os.environ.get('REPLAY_IP', '-1')
+    learner_ip = os.environ.get('LEARNER_IP', '-1')
     registerActorPort = os.environ.get('REGISTERACTORPORT', '-1')
     sendBatchPrioriPort = os.environ.get('SENDBATCHPRIORIPORT', '-1')
     updatePrioriPort = os.environ.get('UPDATEPRIORIPORT', '-1')
     sampleDataPort = os.environ.get('SAMPLEDATAPORT', '-1')
-    return n_actors, replay_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort
+    cacheUpdatePort = os.environ.get('CACHEUPDATEPORT', '-1')
+    return n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, cacheUpdatePort
 
 def push_batch(buffer, actor_id, data_ids, prioris, timestamps):
     """
@@ -51,13 +53,20 @@ class SendBatchPriori(apex_data_pb2_grpc.SendBatchPrioriServicer):
         self.event_flag = False
         self.cnt = 0
     def Send(self, request, context):
+        conn = grpc.insecure_channel(learner_ip + ':' + cacheUpdatePort)
+        cache_data_client = apex_data_pb2_grpc.CacheUpdateStub(channel=conn)
         self.cnt += 1
         actor_id = request.actor_id
         idxes = request.idxes
         prioris = request.prioris
         timestamps = request.timestamp
+        tree_idxes = []
         with lock:
             push_batch(buffer, actor_id, idxes, prioris, timestamps)
+        for i in idxes:
+            tree_idxes.append(actor_id*local_buffer_size + i)
+        cache_request = apex_data_pb2.CacheUpdateRequest(idxes = tree_idxes)
+        cache_response = cache_data_client.Send(cache_request)
         if self.cnt % 10 == 0:
             print("recv batch priori actor:{}, buffer len:{}".format(actor_id, len(buffer)))
         if len(buffer._storage) > args.threshold_size and not self.event_flag:
@@ -106,13 +115,17 @@ if __name__ == '__main__':
     """
     environment parameters
     """
-    n_actors, replay_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort = get_environ()
+    n_actors, replay_ip, learner_ip, registerActorPort, sendBatchPrioriPort, updatePrioriPort, sampleDataPort, cacheUpdatePort = get_environ()
 
     args = argparser()
     utils.set_global_seeds(args.seed, use_torch=False)
     buffer = CustomPrioritizedReplayBuffer(args.replay_buffer_size, args.alpha, n_actors)
+    local_buffer_size = args.replay_buffer_size//n_actors
     event = Event()
     lock = Lock()
+
+    #conn = grpc.insecure_channel(learner_ip + ':' + cacheUpdatePort)
+    #cache_data_client = apex_data_pb2_grpc.CacheUpdateStub(channel=conn)
 
     """
     actor send (actor_id, data_id, priori) to replay buffer
